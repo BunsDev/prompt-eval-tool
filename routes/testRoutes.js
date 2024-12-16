@@ -131,9 +131,10 @@ router.post('/tests/:test_id/run', async (req, res) => {
 
             if (provider === 'anthropic') {
               const system_message = (test.messages && test.messages.length && test.messages[0].role === "system") ? test.messages[0].content : undefined;
+              if (system_message !== undefined) test.messages = test.messages.slice(1)
               response = await sdk.messages.create({
-                max_tokens: 1024,
-                messages: test.messages.slice(1).map(msg => ({ role: msg.role, content: msg.content })),
+                max_tokens: 4096,
+                messages: test.messages.map(msg => ({ role: msg.role, content: msg.content })),
                 model: model,
                 system: system_message,
               });

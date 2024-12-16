@@ -26,7 +26,7 @@
             <tbody>
                 <% scenario.results.forEach(function(result) { %>
                     <tr>
-                        <td><%= result.response %></td>
+                        <td style="font-family: monospace; white-space: pre-wrap; word-wrap: break-word; background-color: #f4f4f4; padding: 10px; border-radius: 4px;"><%= result.response %></td>
                         <td><%= result.review %></td>
                         <td><%= result.score %></td>
                     </tr>

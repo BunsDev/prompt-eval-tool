@@ -31,8 +31,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware to parse request bodies
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json( { limit: '50mb' } ));
 
 // Setting the templating engine to EJS
 app.set("view engine", "ejs");
