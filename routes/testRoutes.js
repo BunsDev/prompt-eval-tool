@@ -1,23 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const Test = require('../models/testModel');
-const { isAuthenticated } = require('./middleware/authMiddleware');
 const OpenAI = require('openai');
 const Anthropic = require('@anthropic-ai/sdk');
 const Groq = require('groq-sdk');
 
-router.post('/tests', isAuthenticated, async (req, res) => {
+router.post('/tests', async (req, res) => {
   try {
-    const userId = req.session.userId; // Assuming the session contains the userId once authenticated
     const newTest = new Test({
-      user_id: userId,
       name: 'New Test',
       messages: [],
       review_instructions: '',
       scenarios: []
     });
     const savedTest = await newTest.save();
-    console.log(`New test created with ID: ${savedTest.test_id} by user ID: ${userId}`);
+    console.log(`New test created with ID: ${savedTest.test_id}`);
     res.redirect(`/tests/${savedTest.test_id}/`);
   } catch (error) {
     console.error('Failed to create a new test:', error.message);
@@ -26,14 +23,11 @@ router.post('/tests', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/tests/:test_id/', isAuthenticated, async (req, res) => {
+router.get('/tests/:test_id/', async (req, res) => {
   try {
     const test = await Test.findOne({ test_id: req.params.test_id });
     if (!test) {
       return res.status(404).send('Test not found');
-    }
-    if (test.user_id.toString() !== req.session.userId) {
-      return res.status(403).send('Unauthorized access to the test');
     }
     // Calculate the score percentages for each scenario
     const scorePercentages = test.calculateScorePercentage();
@@ -53,7 +47,7 @@ router.get('/tests/:test_id/', isAuthenticated, async (req, res) => {
   }
 });
 
-router.post('/tests/:test_id/', isAuthenticated, async (req, res) => {
+router.post('/tests/:test_id/', async (req, res) => {
   try {
     const { name, review_instructions } = req.body;
     let messages = req.body.messages || [];
@@ -70,9 +64,6 @@ router.post('/tests/:test_id/', isAuthenticated, async (req, res) => {
     if (!test) {
       return res.status(404).send('Test not found');
     }
-    if (test.user_id.toString() !== req.session.userId) {
-      return res.status(403).send('Unauthorized access to the test');
-    }
     test.name = name;
     test.review_instructions = review_instructions;
     test.messages = messages;
@@ -86,14 +77,11 @@ router.post('/tests/:test_id/', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/tests/:test_id/run/', isAuthenticated, async (req, res) => {
+router.get('/tests/:test_id/run/', async (req, res) => {
   try {
     const test = await Test.findOne({ test_id: req.params.test_id }).lean();
     if (!test) {
       return res.status(404).send('Test not found');
-    }
-    if (test.user_id.toString() !== req.session.userId) {
-      return res.status(403).send('Unauthorized access to the test');
     }
 
     // Reading model data from environment variables
@@ -112,7 +100,7 @@ router.get('/tests/:test_id/run/', isAuthenticated, async (req, res) => {
   }
 });
 
-router.post('/tests/:test_id/run', isAuthenticated, async (req, res) => {
+router.post('/tests/:test_id/run', async (req, res) => {
   try {
     const testId = req.params.test_id;
     const test = await Test.findOne({ test_id: testId });
@@ -186,7 +174,7 @@ router.post('/tests/:test_id/run', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/tests/:test_id/scenarios/:scenario_index', isAuthenticated, async (req, res) => {
+router.get('/tests/:test_id/scenarios/:scenario_index', async (req, res) => {
   try {
     const { test_id, scenario_index } = req.params;
     const test = await Test.findOne({ test_id: test_id });
@@ -205,7 +193,7 @@ router.get('/tests/:test_id/scenarios/:scenario_index', isAuthenticated, async (
   }
 });
 
-router.post('/tests/:test_id/review', isAuthenticated, async (req, res) => {
+router.post('/tests/:test_id/review', async (req, res) => {
   const testId = req.params.test_id;
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

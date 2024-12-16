@@ -1,66 +1,90 @@
 # Eval Tool
 
-**Eval Tool** is a web application designed to evaluate the performance of various Large Language Models (LLMs) including OpenAI, Anthropic, and Groq. It allows users to create, configure, and run tests against different AI models, analyze the responses, and review the results with detailed instructions.
+Eval Tool is a web application designed to help users evaluate various Large Language Models (LLMs) such as OpenAI, Anthropic, and Groq. The application allows users to create, edit, and run tests to assess the performance of different LLMs, providing detailed results and automated reviews.
 
 ## Overview
 
-The Eval Tool web application is built using a Node.js and Express backend with MongoDB for data storage. It utilizes a Model-View-Controller (MVC) architecture to separate concerns, making the application scalable and manageable. The front end is rendered using EJS templates and styled with Bootstrap for a responsive design. User authentication is managed via session-based authentication to ensure secure access to the application.
+The Eval Tool web application is built with a Node.js and Express backend, utilizing MongoDB for storing tests, user information, and test results. The application interacts with various LLM providers via their respective SDKs: OpenAI, Anthropic, and Groq. The front end is rendered using EJS templates and styled with Bootstrap for responsiveness and aesthetics. The application follows a Model-View-Controller (MVC) architecture to separate concerns, making the codebase more manageable and scalable.
+
+### Architecture and Technologies
+- **Backend**: Node.js, Express
+- **Database**: MongoDB (via Mongoose)
+- **Frontend**: EJS templates, Bootstrap
+- **Authentication**: Session-based authentication (currently being removed)
+- **Configuration**: Environment variables (.env file)
+- **LLM SDKs**: OpenAI, Anthropic, Groq
 
 ### Project Structure
-
-- **Models**: Contains schema definitions for MongoDB.
-- **Routes**: Defines the server routes for handling HTTP requests.
-- **Public**: Holds static files like JavaScript, CSS, and images.
-- **Views**: Contains EJS templates for rendering HTML on the client side.
-- **Config**: Includes configuration files for the application, such as database connections.
-- **Controllers**: Logic for handling requests, interacting with the database, and returning responses.
+- **models/**: Contains Mongoose models for MongoDB
+  - `testModel.js`
+  - `User.js` (being removed)
+- **public/**: Static files (CSS, JS)
+  - `css/style.css`
+  - `js/editTest.js`
+  - `js/main.js`
+  - `js/reviewScenarios.js`
+  - `js/testRunConfig.js`
+- **routes/**: Express routes
+  - `testRoutes.js`
+- **sample_test_conversations/**: Sample JSON files for test conversations
+- **views/**: EJS templates
+  - `index.ejs`
+  - `partials/_head.ejs`
+  - `partials/_header.ejs`
+  - `partials/_footer.ejs`
+  - `scenarioDetails.ejs`
+  - `testDetails.ejs`
+  - `testRunConfig.ejs`
+- **.env**: Environment variables
+- **server.js**: Main server file
 
 ## Features
 
-- **Test Creation and Management**: Users can create and manage tests with specific scenarios to evaluate different LLMs.
-- **Dynamic Test Configuration**: Configure tests dynamically by selecting AI providers, models, and other parameters.
-- **Parallel Execution**: Tests are executed in parallel to optimize performance and reduce waiting time.
-- **Results Analysis**: Analyze the responses from LLMs based on predefined review instructions and score the adequacy of responses.
-- **User Authentication**: Secure user authentication system to manage access to different functionalities.
+- **Test Management**: Create, edit, and delete tests.
+- **Scenario Configuration**: Define scenarios with different providers, models, and parameters.
+- **Parallel Execution**: Run multiple LLM requests in parallel for efficient processing.
+- **Automated Reviews**: Use GPT-4-turbo-preview for automated review of LLM responses.
+- **Detailed Results**: View detailed results for each scenario, including LLM responses, review notes, and scores.
+- **Import Messages**: Import test messages via JSON files.
+- **Dynamic Forms**: Add and remove messages and scenarios dynamically in the forms.
 
-## Getting Started
+## Getting started
 
 ### Requirements
 
-- Node.js
-- MongoDB
-- NPM (Node Package Manager)
+Ensure you have the following technologies set up on your computer:
+- Node.js (v14.x or later)
+- MongoDB (local installation or cloud version like MongoDB Atlas)
 
 ### Quickstart
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://example.com/eval-tool.git
-   cd eval-tool
-   ```
+    ```bash
+    git clone <repository-url>
+    cd eval-tool
+    ```
 
 2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
-3. **Set up the environment variables**:
-   Copy `.env.example` to `.env` and update the values accordingly.
+3. **Set up environment variables**:
+    - Create a `.env` file based on the `.env.example` template.
+    - Set the required environment variables such as `PORT`, `DATABASE_URL`, `SESSION_SECRET`, and API keys for OpenAI, Anthropic, and Groq.
 
-4. **Start the MongoDB server**:
-   Ensure that MongoDB is running on your system or connect to a remote MongoDB server.
+4. **Run the application**:
+    ```bash
+    npm start
+    ```
 
-5. **Run the application**:
-   ```bash
-   npm start
-   ```
-   This will start the server on the defined PORT, defaulting to 3000.
-
-6. **Access the application**:
-   Open a web browser and go to `http://localhost:3000` to start using the Eval Tool.
+5. **Access the application**:
+    - Open your browser and navigate to `http://localhost:<PORT>` (default port is 3000).
 
 ### License
 
-Copyright (c) 2024. All rights reserved.
+The project is proprietary (not open source).
 
-This project is proprietary and not open source. Redistribution or commercial use is strictly prohibited without prior agreement.
+```
+Copyright (c) 2024.
+```
