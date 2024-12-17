@@ -7,11 +7,6 @@ const testSchema = new mongoose.Schema({
     default: uuidv4,
     unique: true
   },
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
   name: {
     type: String,
     required: true

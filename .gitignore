@@ -3,3 +3,4 @@ node_modules/
 conversations/
 .DS_Store
 .idea/
+package-lock.json
